@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.UniqueElements;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -27,7 +28,7 @@ public class User {
     String firstName;
     String lastName;
     String address;
-    Timestamp dob;
+    LocalDate dob;
     String phone;
     String email;
 
