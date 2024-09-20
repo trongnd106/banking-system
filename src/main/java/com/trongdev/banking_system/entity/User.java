@@ -20,10 +20,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-
-    @UniqueElements
+    @Column(unique = true)
     String username;
-
     String password;
     String firstName;
     String lastName;
@@ -31,14 +29,23 @@ public class User {
     LocalDate dob;
     String phone;
     String email;
-
-    @UniqueElements
+    @Column(unique = true)
     String identityCard;
-
     int isActive;
     Timestamp createdAt;
     Timestamp updatedAt;
-
     @ManyToMany
     Set<Role> roles;
 }
+
+
+
+
+
+
+
+
+
+
+
+

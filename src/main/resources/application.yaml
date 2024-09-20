@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-    context-path: /zen8labs
+    context-path: /api/v1/zen8labs-system
 
 spring:
   datasource:
