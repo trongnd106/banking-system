@@ -1,7 +1,9 @@
 package com.trongdev.banking_system.controller;
 
 import com.trongdev.banking_system.dto.request.UserCreateRequest;
+import com.trongdev.banking_system.dto.request.UserUpdateRequest;
 import com.trongdev.banking_system.dto.response.ApiResponse;
+import com.trongdev.banking_system.dto.response.UserResponse;
 import com.trongdev.banking_system.entity.User;
 import com.trongdev.banking_system.service.UserService;
 import jakarta.validation.Valid;
@@ -9,10 +11,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -22,10 +23,48 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     UserService userService;
     @PostMapping
-    ApiResponse<User> createUser(@RequestBody UserCreateRequest request){
-        ApiResponse<User> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.createUser(request));
-        return apiResponse;
+    ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request){
+        return ApiResponse.<UserResponse>builder()
+                .code(2000)
+                .result(userService.create(request))
+                .message("Create user successfully!")
+                .build();
+    }
+
+    @GetMapping
+    ApiResponse<List<UserResponse>> getAllUsers(){
+        return ApiResponse.<List<UserResponse>>builder()
+                .code(1000)
+                .result(userService.getAll())
+                .message("Success get all users!")
+                .build();
+    }
+
+    @GetMapping("/{userId}")
+    ApiResponse<UserResponse> getUserDetail(@PathVariable("userId") String id){
+        return ApiResponse.<UserResponse>builder()
+                .code(1000)
+                .result(userService.getDetail(id))
+                .message("Success get user detail!")
+                .build();
+    }
+
+    @PatchMapping("/{userId}")
+    ApiResponse<UserResponse> updateUser(@PathVariable("userId") String id, @RequestBody UserUpdateRequest request){
+        return ApiResponse.<UserResponse>builder()
+                .code(2000)
+                .result(userService.update(id, request))
+                .message("Update user successfully!")
+                .build();
+    }
+
+    @DeleteMapping("/{userId}")
+    ApiResponse<Void> deleteUser(@PathVariable("userId") String id){
+        userService.delete(id);
+        return ApiResponse.<Void>builder()
+                .code(999)
+                .message("User deleted successfully!")
+                .build();
     }
 
 }
