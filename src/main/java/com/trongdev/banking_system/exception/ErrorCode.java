@@ -14,6 +14,7 @@ public enum ErrorCode {
     INVALID_KEY(1111, "Invalid message key", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(2001, "Not found user", HttpStatus.NOT_FOUND),
     USER_EXISTED(1002, "User existed, try another", HttpStatus.BAD_REQUEST),
+    PERMISSION_EXISTED(1012, "User existed, please enter the another", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(3001, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(3002, "Do not have permission", HttpStatus.FORBIDDEN),
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),

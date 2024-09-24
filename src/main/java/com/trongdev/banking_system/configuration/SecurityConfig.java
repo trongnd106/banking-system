@@ -15,8 +15,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+    // todo: Fix after complete role & permission
     private final String[] PUBLIC_ENDPOINTS = {
-        "/users", "/users/**"
+        "/users", "/users/**", "/permissions", "/permissions/**"
     };
 
     @Bean

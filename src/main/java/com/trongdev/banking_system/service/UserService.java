@@ -3,7 +3,6 @@ package com.trongdev.banking_system.service;
 import com.trongdev.banking_system.dto.request.UserCreateRequest;
 import com.trongdev.banking_system.dto.request.UserUpdateRequest;
 import com.trongdev.banking_system.dto.response.UserResponse;
-import com.trongdev.banking_system.entity.Role;
 import com.trongdev.banking_system.entity.User;
 import com.trongdev.banking_system.exception.AppException;
 import com.trongdev.banking_system.exception.ErrorCode;
@@ -13,14 +12,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
