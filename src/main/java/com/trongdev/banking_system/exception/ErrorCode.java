@@ -15,6 +15,7 @@ public enum ErrorCode {
     USER_NOT_EXISTED(2001, "Not found user", HttpStatus.NOT_FOUND),
     USER_EXISTED(1002, "User existed, try another", HttpStatus.BAD_REQUEST),
     PERMISSION_EXISTED(1012, "Permission existed, please enter the another", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_EXISTED(1013, "Error from server, role staff not found", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(3001, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(3002, "Do not have permission", HttpStatus.FORBIDDEN),
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),

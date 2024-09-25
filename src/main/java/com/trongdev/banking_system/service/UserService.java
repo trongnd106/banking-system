@@ -4,10 +4,12 @@ import com.trongdev.banking_system.dto.request.UserCreateRequest;
 import com.trongdev.banking_system.dto.request.UserUpdateRequest;
 import com.trongdev.banking_system.dto.response.PaginatedResponse;
 import com.trongdev.banking_system.dto.response.UserResponse;
+import com.trongdev.banking_system.entity.Role;
 import com.trongdev.banking_system.entity.User;
 import com.trongdev.banking_system.exception.AppException;
 import com.trongdev.banking_system.exception.ErrorCode;
 import com.trongdev.banking_system.mapper.UserMapper;
+import com.trongdev.banking_system.repository.RoleRepository;
 import com.trongdev.banking_system.repository.UserRepository;
 import com.trongdev.banking_system.utils.ConstValue;
 import lombok.AccessLevel;
@@ -22,7 +24,10 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +37,7 @@ public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
+    RoleRepository roleRepository;
 
     public UserResponse create(UserCreateRequest request){
         if(userRepository.existsByUsername(request.getUsername()))
@@ -45,11 +51,9 @@ public class UserService {
         user.setUpdatedAt(currentTime);
         user.setIsActive(1);
 
-//        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-//            Role userRole = new Role();
-//            userRole.setName("USER");
-//            user.setRoles(Set.of(userRole));
-//        }
+        Role staffRole = new Role();
+        staffRole.setName("STAFF");
+        user.setRoles(new HashSet<>(Collections.singletonList(staffRole)));
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
