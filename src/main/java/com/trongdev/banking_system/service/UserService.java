@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +89,7 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
+//    @PreAuthorize("hasAuthority('UPDATE_USER')")
     public UserResponse update(String userId, UserUpdateRequest request){
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
@@ -96,6 +98,23 @@ public class UserService {
         userMapper.updateUser(user, request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
+        // todo: Fix after integrate Token authen&author
+        // just user with permission UPDATE_ROLE can edit role
+        if (request.getRoles() != null && !request.getRoles().isEmpty()) {
+//            if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+//                    .anyMatch(auth -> auth.getAuthority().equals("UPDATE_ROLE"))) {
+            Set<Role> roles = new HashSet<>();
+            for (String roleName : request.getRoles()) {
+                Role role = roleRepository.findById(roleName).orElseThrow(
+                        () -> new AppException(ErrorCode.ROLE_NOT_EXISTED)
+                );
+                roles.add(role);
+            }
+            user.setRoles(roles);
+//            } else {
+//                throw new AppException(ErrorCode.PERMISSION_DENIED);
+//            }
+        }
         return userMapper.toUserResponse(userRepository.save(user));
     }
 

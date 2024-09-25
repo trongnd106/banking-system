@@ -1,11 +1,13 @@
 package com.trongdev.banking_system.dto.request;
 
+import com.trongdev.banking_system.entity.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -27,6 +29,8 @@ public class UserUpdateRequest {
 
     @Email(message = "EMAIL_INVALID")
     String email;
+
+    Set<String> roles;
 }
 
 
