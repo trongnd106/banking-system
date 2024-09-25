@@ -21,5 +21,8 @@ public class TransactionLogs {
     Transaction transaction;
 
     String status;
+
+    int isActive;
+
     String remarks;
 }
