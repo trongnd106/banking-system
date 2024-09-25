@@ -9,6 +9,7 @@ import com.trongdev.banking_system.exception.AppException;
 import com.trongdev.banking_system.exception.ErrorCode;
 import com.trongdev.banking_system.mapper.UserMapper;
 import com.trongdev.banking_system.repository.UserRepository;
+import com.trongdev.banking_system.utils.ConstValue;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -54,9 +55,10 @@ public class UserService {
     }
 
     public PaginatedResponse<UserResponse> getAll(int page){
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        var perPage = ConstValue.PER_PAGE;
+        Pageable pageable = PageRequest.of(page - 1, perPage);
 
-        Page<User> userPage = (Page<User>) userRepository.findAllByIsActive(1, pageable);
+        Page<User> userPage = userRepository.findAllByIsActive(1, pageable);
 
         List<UserResponse> userResponses = userPage.getContent().stream()
                 .map(userMapper::toUserResponse).toList();
@@ -66,8 +68,8 @@ public class UserService {
         int prevPage = page > 1 ? page - 1 : 0;
 
         return PaginatedResponse.<UserResponse>builder()
-                .total(totalPage)
-                .perPage(10)
+                .totalPage(totalPage)
+                .perPage(perPage)
                 .curPage(page)
                 .nextPage(nextPage)
                 .prevPage(prevPage)

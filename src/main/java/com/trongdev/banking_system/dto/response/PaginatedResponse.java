@@ -13,7 +13,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class PaginatedResponse<T> {
-    long total;
+    long totalPage;
     int curPage;
     int nextPage;
     int prevPage;

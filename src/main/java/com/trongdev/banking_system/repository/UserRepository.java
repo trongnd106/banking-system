@@ -1,6 +1,7 @@
 package com.trongdev.banking_system.repository;
 
 import com.trongdev.banking_system.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,5 +23,5 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("UPDATE User u SET u.isActive = 0 WHERE u.id = :userId")
     void deactivateUser(@Param("userId") String userId);
 
-    List<User> findAllByIsActive(int isActive, Pageable pageable);
+    Page<User> findAllByIsActive(int isActive, Pageable pageable);
 }
