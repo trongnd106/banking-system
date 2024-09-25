@@ -2,6 +2,7 @@ package com.trongdev.banking_system.service;
 
 import com.trongdev.banking_system.dto.request.UserCreateRequest;
 import com.trongdev.banking_system.dto.request.UserUpdateRequest;
+import com.trongdev.banking_system.dto.response.PaginatedResponse;
 import com.trongdev.banking_system.dto.response.UserResponse;
 import com.trongdev.banking_system.entity.User;
 import com.trongdev.banking_system.exception.AppException;
@@ -12,6 +13,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,9 +53,26 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public List<UserResponse> getAll(){
-        return userRepository.findAllByIsActive(1).stream()
+    public PaginatedResponse<UserResponse> getAll(int page){
+        Pageable pageable = PageRequest.of(page - 1, 10);
+
+        Page<User> userPage = (Page<User>) userRepository.findAllByIsActive(1, pageable);
+
+        List<UserResponse> userResponses = userPage.getContent().stream()
                 .map(userMapper::toUserResponse).toList();
+
+        int totalPage = userPage.getTotalPages();
+        int nextPage = page < totalPage ? page + 1 : 0;
+        int prevPage = page > 1 ? page - 1 : 0;
+
+        return PaginatedResponse.<UserResponse>builder()
+                .total(totalPage)
+                .perPage(10)
+                .curPage(page)
+                .nextPage(nextPage)
+                .prevPage(prevPage)
+                .data(userResponses)
+                .build();
     }
 
     public UserResponse getDetail(String id){

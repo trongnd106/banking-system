@@ -3,10 +3,12 @@ package com.trongdev.banking_system.controller;
 import com.trongdev.banking_system.dto.request.UserCreateRequest;
 import com.trongdev.banking_system.dto.request.UserUpdateRequest;
 import com.trongdev.banking_system.dto.response.ApiResponse;
+import com.trongdev.banking_system.dto.response.PaginatedResponse;
 import com.trongdev.banking_system.dto.response.UserResponse;
 import com.trongdev.banking_system.entity.User;
 import com.trongdev.banking_system.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,13 +32,12 @@ public class UserController {
                 .message("Create user successfully!")
                 .build();
     }
-
     @GetMapping
-    ApiResponse<List<UserResponse>> getAllUsers(){
-        return ApiResponse.<List<UserResponse>>builder()
+    ApiResponse<PaginatedResponse<UserResponse>> getAllUsers(@RequestParam(defaultValue = "1") int page){
+        return ApiResponse.<PaginatedResponse<UserResponse>>builder()
                 .code(1000)
-                .result(userService.getAll())
-                .message("Success get all users!")
+                .result(userService.getAll(page))
+                .message("Success get all users with page" + page)
                 .build();
     }
 
