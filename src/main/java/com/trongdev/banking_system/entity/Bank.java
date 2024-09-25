@@ -1,9 +1,6 @@
 package com.trongdev.banking_system.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.UniqueElements;
@@ -20,10 +17,10 @@ public class Bank {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @UniqueElements
+    @Column(unique = true)
     String name;
 
-    @UniqueElements
+    @Column(unique = true)
     String code;
 
     String description;
