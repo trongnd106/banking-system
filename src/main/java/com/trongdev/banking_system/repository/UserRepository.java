@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.isActive = 0 WHERE u.id = :userId")
-    void deactivateUser(@Param("userId") String userId);
+    void deactivateUser(@Param("userId") int userId);
 
     Page<User> findAllByIsActive(int isActive, Pageable pageable);
 }

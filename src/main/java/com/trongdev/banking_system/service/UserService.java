@@ -82,7 +82,7 @@ public class UserService {
                 .build();
     }
 
-    public UserResponse getDetail(String id){
+    public UserResponse getDetail(int id){
         var user = userRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("User not found!")
         );
@@ -90,7 +90,7 @@ public class UserService {
     }
 
 //    @PreAuthorize("hasAuthority('UPDATE_USER')")
-    public UserResponse update(String userId, UserUpdateRequest request){
+    public UserResponse update(int userId, UserUpdateRequest request){
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
@@ -118,7 +118,7 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public void delete(String userId){
+    public void delete(int userId){
         userRepository.deactivateUser(userId);
     }
 }
