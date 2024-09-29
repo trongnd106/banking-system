@@ -7,11 +7,13 @@ import com.trongdev.banking_system.repository.BankRuleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@Component
 public class AccountNumberGenerator {
     final BankRuleRepository bankRuleRepository;
 
@@ -30,7 +32,7 @@ public class AccountNumberGenerator {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < length; i++) {
-            sb.append(random.nextInt(10)); // Sinh số ngẫu nhiên từ 0-9
+            sb.append(random.nextInt(10));
         }
 
         return sb.toString();
