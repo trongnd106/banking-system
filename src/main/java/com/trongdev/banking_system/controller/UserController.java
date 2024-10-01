@@ -50,6 +50,15 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/my-info")
+    ApiResponse<UserResponse> getMyInfo(){
+        return ApiResponse.<UserResponse>builder()
+                .code(1000)
+                .result(userService.getMyInfo())
+                .message("Get self-information successfully!")
+                .build();
+    }
+
     @PatchMapping("/{userId}")
     ApiResponse<UserResponse> updateUser(@PathVariable("userId") int id, @RequestBody UserUpdateRequest request){
         return ApiResponse.<UserResponse>builder()
