@@ -59,6 +59,7 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @PreAuthorize("hasAuthority('VIEW_USER_LIST')")
     public PaginatedResponse<UserResponse> getAll(int page){
         var perPage = ConstValue.PER_PAGE;
         Pageable pageable = PageRequest.of(page - 1, perPage);
@@ -82,6 +83,7 @@ public class UserService {
                 .build();
     }
 
+    @PreAuthorize("hasAuthority('VIEW_USER_DETAIL')")
     public UserResponse getDetail(int id){
         var user = userRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("User not found!")
@@ -89,7 +91,7 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-//    @PreAuthorize("hasAuthority('UPDATE_USER')")
+    @PreAuthorize("hasAuthority('UPDATE_USER')")
     public UserResponse update(int userId, UserUpdateRequest request){
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
@@ -118,6 +120,7 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @PreAuthorize("hasAuthority('DELETE_USER')")
     public void delete(int userId){
         userRepository.deactivateUser(userId);
     }
