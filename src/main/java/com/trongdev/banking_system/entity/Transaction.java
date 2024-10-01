@@ -17,15 +17,10 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-
-    @ManyToOne
-    @JoinColumn(name = "senderId", referencedColumnName = "id")
-    User sender;
-
-    @ManyToOne
-    @JoinColumn(name = "receiverId", referencedColumnName = "id")
-    User receiver;
-
+    String senderNumber;
+    String receiverNumber;
+    String senderBank;
+    String receiverBank;
     long amount;
     long fee;
     Timestamp time;
