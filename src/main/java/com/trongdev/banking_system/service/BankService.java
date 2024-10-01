@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,11 +27,13 @@ import java.util.List;
 public class BankService {
     BankRepository bankRepository;
     BankMapper bankMapper;
+    @PreAuthorize("hasAuthority('CREATE_BANK')")
     public BankResponse create(BankCreateRequest request){
         Bank bank = bankMapper.toBank(request);
         return bankMapper.toBankResponse(bankRepository.save(bank));
     }
 
+    @PreAuthorize("hasAuthority('UPDATE_BANK')")
     public BankResponse update(int id, BankUpdateRequest request){
         Bank bank = bankRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.BANK_NOT_EXISTED)
@@ -39,6 +42,7 @@ public class BankService {
         return bankMapper.toBankResponse(bankRepository.save(bank));
     }
 
+    @PreAuthorize("hasAuthority('VIEW_BANK_LIST')")
     public PaginatedResponse<BankResponse> getAll(int page){
         var perPage = ConstValue.PER_PAGE;
         Pageable pageable = PageRequest.of(page - 1, perPage);
@@ -60,6 +64,7 @@ public class BankService {
                 .build();
     }
 
+    @PreAuthorize("hasAuthority('VIEW_BANK_DETAIL')")
     public BankResponse getDetail(int id){
         Bank bank = bankRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.BANK_NOT_EXISTED)
@@ -67,6 +72,7 @@ public class BankService {
         return bankMapper.toBankResponse(bank);
     }
 
+    @PreAuthorize("hasAuthority('DELETE_BANK')")
     public void delete(int id){
         bankRepository.deleteById(id);
     }
