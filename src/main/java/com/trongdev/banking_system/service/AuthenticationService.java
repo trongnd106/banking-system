@@ -7,8 +7,10 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.trongdev.banking_system.dto.request.AuthenticationRequest;
 import com.trongdev.banking_system.dto.request.IntrospectRequest;
+import com.trongdev.banking_system.dto.request.LogoutRequest;
 import com.trongdev.banking_system.dto.response.AuthenticationResponse;
 import com.trongdev.banking_system.dto.response.IntrospectResponse;
+import com.trongdev.banking_system.entity.InvalidToken;
 import com.trongdev.banking_system.entity.User;
 import com.trongdev.banking_system.exception.AppException;
 import com.trongdev.banking_system.exception.ErrorCode;
@@ -125,6 +127,24 @@ public class AuthenticationService {
         return IntrospectResponse.builder()
                 .valid(isValid)
                 .build();
+    }
+
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        try {
+            var signToken = verifyToken(request.getToken(), true);
+
+            String jit = signToken.getJWTClaimsSet().getJWTID();
+            Date exTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+            InvalidToken invalidToken = InvalidToken.builder()
+                    .id(jit)
+                    .expiryTime(exTime)
+                    .build();
+
+            invalidTokenRepository.save(invalidToken);
+        } catch(AppException exception){
+            log.info("Token is already existed!");
+        }
     }
 
     String buildScope(User user){

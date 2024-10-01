@@ -3,6 +3,7 @@ package com.trongdev.banking_system.controller;
 import com.nimbusds.jose.JOSEException;
 import com.trongdev.banking_system.dto.request.AuthenticationRequest;
 import com.trongdev.banking_system.dto.request.IntrospectRequest;
+import com.trongdev.banking_system.dto.request.LogoutRequest;
 import com.trongdev.banking_system.dto.response.ApiResponse;
 import com.trongdev.banking_system.dto.response.AuthenticationResponse;
 import com.trongdev.banking_system.dto.response.IntrospectResponse;
@@ -41,6 +42,16 @@ public class AuthenticationController {
         return ApiResponse.<IntrospectResponse>builder()
                 .code(2000)
                 .result(authenticationService.introspect(request))
+                .build();
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request)
+            throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder()
+                .code(2000)
+                .message("Logout successfully")
                 .build();
     }
 }
