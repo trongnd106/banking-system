@@ -46,4 +46,13 @@ public class AccountController {
                 .message("Admin get detail of an account successfully!")
                 .build();
     }
+
+    @DeleteMapping("/{accountId}")
+    ApiResponse<Void> delete(@PathVariable("accountId") int id){
+        accountService.delete(id);
+        return ApiResponse.<Void>builder()
+                .code(999)
+                .message("Admin delete an account successfully!")
+                .build();
+    }
 }

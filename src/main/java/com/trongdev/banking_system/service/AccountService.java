@@ -96,4 +96,9 @@ public class AccountService {
                     -> new RuntimeException("Account not found"));
         return accountMapper.toAccountResponse(account);
     }
+
+    @PreAuthorize("hasAuthority('DELETE_ACCOUNT')")
+    public void delete(int id){
+        accountRepository.deleteById(id);
+    }
 }
