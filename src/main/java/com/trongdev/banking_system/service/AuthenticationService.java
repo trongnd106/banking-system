@@ -6,7 +6,9 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.trongdev.banking_system.dto.request.AuthenticationRequest;
+import com.trongdev.banking_system.dto.request.IntrospectRequest;
 import com.trongdev.banking_system.dto.response.AuthenticationResponse;
+import com.trongdev.banking_system.dto.response.IntrospectResponse;
 import com.trongdev.banking_system.entity.User;
 import com.trongdev.banking_system.exception.AppException;
 import com.trongdev.banking_system.exception.ErrorCode;
@@ -110,7 +112,20 @@ public class AuthenticationService {
                 .build();
     }
 
-    public
+    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException,ParseException{
+        var token = request.getToken();
+        boolean isValid = true;
+
+        try {
+            verifyToken(token, false);
+        } catch (AppException e) {
+            isValid = false;
+        }
+
+        return IntrospectResponse.builder()
+                .valid(isValid)
+                .build();
+    }
 
     String buildScope(User user){
         StringJoiner stringJoiner = new StringJoiner(" ");
