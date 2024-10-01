@@ -2,10 +2,12 @@ package com.trongdev.banking_system.controller;
 
 import com.trongdev.banking_system.dto.request.UserCreateRequest;
 import com.trongdev.banking_system.dto.request.UserUpdateRequest;
+import com.trongdev.banking_system.dto.response.AccountDetailResponse;
 import com.trongdev.banking_system.dto.response.ApiResponse;
 import com.trongdev.banking_system.dto.response.PaginatedResponse;
 import com.trongdev.banking_system.dto.response.UserResponse;
 import com.trongdev.banking_system.entity.User;
+import com.trongdev.banking_system.service.AccountService;
 import com.trongdev.banking_system.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
@@ -24,6 +26,7 @@ import java.util.List;
 @Slf4j
 public class UserController {
     UserService userService;
+    AccountService accountService;
     @PostMapping
     ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request){
         return ApiResponse.<UserResponse>builder()
@@ -74,6 +77,15 @@ public class UserController {
         return ApiResponse.<Void>builder()
                 .code(999)
                 .message("User deleted successfully!")
+                .build();
+    }
+
+    @GetMapping("/my-account")
+    ApiResponse<PaginatedResponse<AccountDetailResponse>> getAccounts(@RequestParam(defaultValue = "1") int page){
+        return ApiResponse.<PaginatedResponse<AccountDetailResponse>>builder()
+                .code(1000)
+                .result(accountService.getMyAccount(page))
+                .message("Get your all accounts successfully!")
                 .build();
     }
 

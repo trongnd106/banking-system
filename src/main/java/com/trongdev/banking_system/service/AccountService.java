@@ -97,6 +97,33 @@ public class AccountService {
         return accountMapper.toAccountResponse(account);
     }
 
+    public PaginatedResponse<AccountDetailResponse> getMyAccount(int page){
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        var currUser = userRepository.findByUsername(username).orElseThrow(()
+                -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        var perPage = ConstValue.ACCOUNT_PER;
+        Pageable pageable = PageRequest.of(page - 1, perPage);
+
+        Page<Account> accountPage = accountRepository.findAllByUser(currUser,pageable);
+        List<AccountDetailResponse> myAccountResponse = accountPage.getContent().stream()
+                .map(accountMapper::toAccountResponse).toList();
+
+        int totalPage = accountPage.getTotalPages();
+        int nextPage = page < totalPage ? page + 1 : 0;
+        int prevPage = page > 1 ? page - 1 : 0;
+
+        return PaginatedResponse.<AccountDetailResponse>builder()
+                .totalPage(totalPage)
+                .perPage(perPage)
+                .curPage(page)
+                .nextPage(nextPage)
+                .prevPage(prevPage)
+                .data(myAccountResponse)
+                .build();
+    }
+
     @PreAuthorize("hasAuthority('DELETE_ACCOUNT')")
     public void delete(int id){
         accountRepository.deleteById(id);

@@ -5,4 +5,5 @@ import lombok.experimental.FieldDefaults;
 
 public interface ConstValue {
     int PER_PAGE = 10;
+    int ACCOUNT_PER = 5;
 }
