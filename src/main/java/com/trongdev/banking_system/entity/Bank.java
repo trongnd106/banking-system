@@ -23,5 +23,6 @@ public class Bank {
     @Column(unique = true)
     String code;
 
+    @Column(name = "description", length = 10000)
     String description;
 }
