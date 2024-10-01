@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     // todo: Fix after complete role & permission
     private final String[] PUBLIC_ENDPOINTS = {
-        "/users", "/users/**", "/auth/**", "/permissions", "/permissions/**", "/roles", "roles/**", "/banks", "/banks/**"
+        "/users", "/users/**", "/auth/**", "/permissions", "/permissions/**", "/roles", "roles/**", "/banks", "/banks/**", "/transaction", "/transaction/**"
     };
 
     @Autowired
