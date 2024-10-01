@@ -28,6 +28,7 @@ public class Account {
 
     String number;
     long balance;
+    int isActive;
     Timestamp createdAt;
     Timestamp updatedAt;
 }
