@@ -4,6 +4,7 @@ import com.nimbusds.jose.JOSEException;
 import com.trongdev.banking_system.dto.request.AuthenticationRequest;
 import com.trongdev.banking_system.dto.request.IntrospectRequest;
 import com.trongdev.banking_system.dto.request.LogoutRequest;
+import com.trongdev.banking_system.dto.request.RefreshRequest;
 import com.trongdev.banking_system.dto.response.ApiResponse;
 import com.trongdev.banking_system.dto.response.AuthenticationResponse;
 import com.trongdev.banking_system.dto.response.IntrospectResponse;
@@ -52,6 +53,16 @@ public class AuthenticationController {
         return ApiResponse.<Void>builder()
                 .code(2000)
                 .message("Logout successfully")
+                .build();
+    }
+
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> refresh(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        return ApiResponse.<AuthenticationResponse>builder()
+                .code(2000)
+                .result(authenticationService.refreshToken(request))
+                .message("Request to refresh token succesfully!")
                 .build();
     }
 }

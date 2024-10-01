@@ -8,6 +8,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.trongdev.banking_system.dto.request.AuthenticationRequest;
 import com.trongdev.banking_system.dto.request.IntrospectRequest;
 import com.trongdev.banking_system.dto.request.LogoutRequest;
+import com.trongdev.banking_system.dto.request.RefreshRequest;
 import com.trongdev.banking_system.dto.response.AuthenticationResponse;
 import com.trongdev.banking_system.dto.response.IntrospectResponse;
 import com.trongdev.banking_system.entity.InvalidToken;
@@ -18,6 +19,7 @@ import com.trongdev.banking_system.repository.InvalidTokenRepository;
 import com.trongdev.banking_system.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.Singular;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
@@ -145,6 +147,30 @@ public class AuthenticationService {
         } catch(AppException exception){
             log.info("Token is already existed!");
         }
+    }
+
+    public AuthenticationResponse refreshToken(RefreshRequest request)
+            throws ParseException, JOSEException {
+        var signJWT = verifyToken(request.getToken(), true);
+        var jit = signJWT.getJWTClaimsSet().getJWTID();
+        var exTime = signJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidToken invalidToken = InvalidToken.builder()
+                .id(jit)
+                .expiryTime(exTime)
+                .build();
+
+        invalidTokenRepository.save(invalidToken);
+
+        var username = signJWT.getJWTClaimsSet().getSubject();
+        var user = userRepository.findByUsername(username).orElseThrow(()
+                -> new AppException(ErrorCode.UNAUTHENTICATED));
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
     }
 
     String buildScope(User user){
