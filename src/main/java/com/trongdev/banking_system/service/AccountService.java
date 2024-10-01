@@ -89,4 +89,11 @@ public class AccountService {
                 .data(accountResponse)
                 .build();
     }
+
+    @PreAuthorize("hasAuthority('VIEW_ACCOUNT_DETAIL')")
+    public AccountDetailResponse getDetail(int id){
+        Account account = accountRepository.findById(id).orElseThrow(()
+                    -> new RuntimeException("Account not found"));
+        return accountMapper.toAccountResponse(account);
+    }
 }

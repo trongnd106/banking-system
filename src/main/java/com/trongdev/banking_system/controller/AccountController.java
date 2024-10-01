@@ -37,4 +37,13 @@ public class AccountController {
                 .message("Admin get all bank account successfully!")
                 .build();
     }
+
+    @GetMapping("/{accountId}")
+    ApiResponse<AccountDetailResponse> getDetail(@PathVariable("accountId") int id){
+        return ApiResponse.<AccountDetailResponse>builder()
+                .code(1000)
+                .result(accountService.getDetail(id))
+                .message("Admin get detail of an account successfully!")
+                .build();
+    }
 }
