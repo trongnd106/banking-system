@@ -2,12 +2,10 @@ package com.trongdev.banking_system.controller;
 
 import com.trongdev.banking_system.dto.request.UserCreateRequest;
 import com.trongdev.banking_system.dto.request.UserUpdateRequest;
-import com.trongdev.banking_system.dto.response.AccountDetailResponse;
-import com.trongdev.banking_system.dto.response.ApiResponse;
-import com.trongdev.banking_system.dto.response.PaginatedResponse;
-import com.trongdev.banking_system.dto.response.UserResponse;
+import com.trongdev.banking_system.dto.response.*;
 import com.trongdev.banking_system.entity.User;
 import com.trongdev.banking_system.service.AccountService;
+import com.trongdev.banking_system.service.TransactionService;
 import com.trongdev.banking_system.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
@@ -27,6 +25,7 @@ import java.util.List;
 public class UserController {
     UserService userService;
     AccountService accountService;
+    TransactionService transactionService;
     @PostMapping
     ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request){
         return ApiResponse.<UserResponse>builder()
@@ -89,4 +88,12 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/my-transaction")
+    ApiResponse<PaginatedResponse<TransactionResponse>> getTransaction(@RequestParam(defaultValue = "1") int page){
+        return ApiResponse.<PaginatedResponse<TransactionResponse>>builder()
+                .code(1000)
+                .result(transactionService.getMyTransaction(page))
+                .message("Get your all transactions successfully!")
+                .build();
+    }
 }

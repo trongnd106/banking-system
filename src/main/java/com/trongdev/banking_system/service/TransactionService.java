@@ -7,10 +7,14 @@ import com.trongdev.banking_system.dto.response.TransactionResponse;
 import com.trongdev.banking_system.entity.Account;
 import com.trongdev.banking_system.entity.Transaction;
 import com.trongdev.banking_system.entity.TransactionLogs;
+import com.trongdev.banking_system.entity.User;
+import com.trongdev.banking_system.exception.AppException;
+import com.trongdev.banking_system.exception.ErrorCode;
 import com.trongdev.banking_system.mapper.TransactionMapper;
 import com.trongdev.banking_system.repository.AccountRepository;
 import com.trongdev.banking_system.repository.TransactionLogsRepository;
 import com.trongdev.banking_system.repository.TransactionRepository;
+import com.trongdev.banking_system.repository.UserRepository;
 import com.trongdev.banking_system.utils.ConstValue;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +42,7 @@ public class TransactionService {
     TransactionRepository transactionRepository;
     AccountRepository accountRepository;
     TransactionMapper transactionMapper;
+    UserRepository userRepository;
 
     @Transactional
     public TransactionResponse create(TransactionRequest request){
@@ -139,6 +145,33 @@ public class TransactionService {
                 .amount(transaction.getAmount()).fee(transaction.getFee())
                 .status(transactionLogs.getStatus()).remarks(transactionLogs.getRemarks())
                 .time(transaction.getTime())
+                .build();
+    }
+
+    public PaginatedResponse<TransactionResponse> getMyTransaction(int page){
+        String currUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(currUsername).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
+
+        var perPage = ConstValue.PER_PAGE;
+        Pageable pageable = PageRequest.of(page-1, perPage);
+
+        Page<Transaction> myTransactionPage = transactionRepository.findAllByUserId(user.getId(), pageable);
+        List<TransactionResponse> transactionResponses = myTransactionPage.getContent().stream()
+                .map(transactionMapper::toTransactionResponse).toList();
+
+        int totalPage = myTransactionPage.getTotalPages();
+        int nextPage = page < totalPage ? page + 1 : 0;
+        int prevPage = page > 1 ? page - 1 : 0;
+
+        return PaginatedResponse.<TransactionResponse>builder()
+                .totalPage(totalPage)
+                .perPage(perPage)
+                .curPage(page)
+                .nextPage(nextPage)
+                .prevPage(prevPage)
+                .data(transactionResponses)
                 .build();
     }
 }
