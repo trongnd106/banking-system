@@ -7,6 +7,8 @@ import com.trongdev.banking_system.entity.User;
 import com.trongdev.banking_system.service.AccountService;
 import com.trongdev.banking_system.service.TransactionService;
 import com.trongdev.banking_system.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.AccessLevel;
@@ -22,10 +24,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
+@Tag(name = "User Controller")
 public class UserController {
     UserService userService;
     AccountService accountService;
     TransactionService transactionService;
+
+    @Operation(summary = "Add new user",
+            description = "Send a request via this API to create new user")
     @PostMapping
     ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request){
         return ApiResponse.<UserResponse>builder()
@@ -34,6 +40,8 @@ public class UserController {
                 .message("Create user successfully!")
                 .build();
     }
+
+    @Operation(summary = "Get list of users", description = "Send a request via this API to get user list by page")
     @GetMapping
     ApiResponse<PaginatedResponse<UserResponse>> getAllUsers(@RequestParam(defaultValue = "1") int page){
         return ApiResponse.<PaginatedResponse<UserResponse>>builder()
@@ -43,6 +51,7 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Get user detail", description = "Send a request via this API to get user information")
     @GetMapping("/{userId}")
     ApiResponse<UserResponse> getUserDetail(@PathVariable("userId") int id){
         return ApiResponse.<UserResponse>builder()
@@ -52,6 +61,7 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Get current user", description = "Send a request via this API to get current user information")
     @GetMapping("/my-info")
     ApiResponse<UserResponse> getMyInfo(){
         return ApiResponse.<UserResponse>builder()
@@ -61,6 +71,7 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Update user", description = "Send a request via this API to update an user")
     @PatchMapping("/{userId}")
     ApiResponse<UserResponse> updateUser(@PathVariable("userId") int id, @RequestBody UserUpdateRequest request){
         return ApiResponse.<UserResponse>builder()
@@ -70,6 +81,7 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Delete user", description = "Send a request via this API to get delete user")
     @DeleteMapping("/{userId}")
     ApiResponse<Void> deleteUser(@PathVariable("userId") int id){
         userService.delete(id);
@@ -79,6 +91,8 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Get current user accounts",
+            description = "Send a request via this API to get current user's all accounts")
     @GetMapping("/my-account")
     ApiResponse<PaginatedResponse<AccountDetailResponse>> getAccounts(
             @RequestParam(defaultValue = "1") int page,
@@ -90,6 +104,8 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Get current user transactions",
+            description = "Send a request via this API to get current user's all transactions")
     @GetMapping("/my-transaction")
     ApiResponse<PaginatedResponse<TransactionResponse>> getTransaction(@RequestParam(defaultValue = "1") int page){
         return ApiResponse.<PaginatedResponse<TransactionResponse>>builder()
