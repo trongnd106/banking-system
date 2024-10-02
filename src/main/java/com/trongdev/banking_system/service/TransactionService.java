@@ -44,6 +44,7 @@ public class TransactionService {
     TransactionMapper transactionMapper;
     UserRepository userRepository;
 
+    @PreAuthorize("hasAuthority('CREATE_TRANSACTION')")
     @Transactional
     public TransactionResponse create(TransactionRequest request){
         Transaction transaction = new Transaction();
@@ -102,6 +103,7 @@ public class TransactionService {
         }
     }
 
+    @PreAuthorize("hasAuthority('VIEW_TRANSACTION_LIST')")
     public PaginatedResponse<TransactionResponse> getAll(int page){
         var perPage = ConstValue.PER_PAGE;
         Pageable pageable = PageRequest.of(page-1, perPage);
@@ -175,6 +177,7 @@ public class TransactionService {
                 .build();
     }
 
+    @PreAuthorize("hasAuthority('DELETE_TRANSACTION')")
     public void delete(String id){
         TransactionLogs transactionLogs = transactionLogsRepository.findByTransactionId(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
