@@ -1,6 +1,7 @@
 package com.trongdev.banking_system.service;
 
 import com.trongdev.banking_system.dto.request.TransactionRequest;
+import com.trongdev.banking_system.dto.response.PaginatedResponse;
 import com.trongdev.banking_system.dto.response.TransactionResponse;
 import com.trongdev.banking_system.entity.Account;
 import com.trongdev.banking_system.entity.Transaction;
@@ -9,16 +10,21 @@ import com.trongdev.banking_system.mapper.TransactionMapper;
 import com.trongdev.banking_system.repository.AccountRepository;
 import com.trongdev.banking_system.repository.TransactionLogsRepository;
 import com.trongdev.banking_system.repository.TransactionRepository;
+import com.trongdev.banking_system.utils.ConstValue;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -86,6 +92,27 @@ public class TransactionService {
             transactionLogsRepository.save(transactionLogs);
             throw new RuntimeException("Transaction failed", exception);
         }
+    }
+
+    public PaginatedResponse<TransactionResponse> getAll(int page){
+        var perPage = ConstValue.PER_PAGE;
+        Pageable pageable = PageRequest.of(page-1, perPage);
+        Page<Transaction> transactionPage = transactionRepository.findAll(pageable);
+        List<TransactionResponse> transactionResponses = transactionPage.getContent().stream()
+                .map(transactionMapper::toTransactionResponse).toList();
+
+        int totalPage = transactionPage.getTotalPages();
+        int nextPage = page < totalPage ? page + 1 : 0;
+        int prevPage = page > 1 ? page - 1 : 0;
+
+        return PaginatedResponse.<TransactionResponse>builder()
+                .totalPage(totalPage)
+                .perPage(perPage)
+                .curPage(page)
+                .nextPage(nextPage)
+                .prevPage(prevPage)
+                .data(transactionResponses)
+                .build();
     }
 
 }
