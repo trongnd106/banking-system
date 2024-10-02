@@ -4,6 +4,8 @@ import com.trongdev.banking_system.dto.request.RoleRequest;
 import com.trongdev.banking_system.dto.response.ApiResponse;
 import com.trongdev.banking_system.dto.response.RoleResponse;
 import com.trongdev.banking_system.service.RoleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,8 +17,11 @@ import java.util.List;
 @RequestMapping("/roles")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Role Controller")
 public class RoleController {
     RoleService roleService;
+
+    @Operation(summary = "Add new role", description = "Send a request via this API to create a role")
     @PostMapping
     ApiResponse<RoleResponse> create(@RequestBody RoleRequest request){
         return ApiResponse.<RoleResponse>builder()
@@ -26,6 +31,7 @@ public class RoleController {
                 .build();
     }
 
+    @Operation(summary = "Get list of role", description = "Send a request via this API to get role list by page")
     @GetMapping
     ApiResponse<List<RoleResponse>> getAll(){
         return ApiResponse.<List<RoleResponse>>builder()
@@ -35,6 +41,7 @@ public class RoleController {
                 .build();
     }
 
+    @Operation(summary = "Delete role", description = "Send a request via this API to remove a role")
     @DeleteMapping("/{role}")
     ApiResponse<Void> delete(@PathVariable String role){
         roleService.delete(role);
