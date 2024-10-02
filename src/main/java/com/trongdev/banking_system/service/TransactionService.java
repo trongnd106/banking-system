@@ -174,4 +174,11 @@ public class TransactionService {
                 .data(transactionResponses)
                 .build();
     }
+
+    public void delete(String id){
+        TransactionLogs transactionLogs = transactionLogsRepository.findByTransactionId(id)
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+        transactionLogs.setIsActive(0);
+        transactionLogsRepository.save(transactionLogs);
+    }
 }

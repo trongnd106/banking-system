@@ -43,7 +43,16 @@ public class TransactionController {
         return ApiResponse.<TransactionDetailResponse>builder()
                 .code(1000)
                 .result(transactionService.getDetail(id))
-                .message("Admin get 1 transaction detail successfully!")
+                .message("Admin get a transaction detail successfully!")
+                .build();
+    }
+
+    @DeleteMapping("/{transactionId}")
+    ApiResponse<Void> delete(@PathVariable("transactionId") String id){
+        transactionService.delete(id);
+        return ApiResponse.<Void>builder()
+                .code(999)
+                .message("Admin deactive a transaction successfully!")
                 .build();
     }
 }
