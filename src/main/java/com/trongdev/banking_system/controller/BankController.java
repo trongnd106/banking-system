@@ -6,6 +6,8 @@ import com.trongdev.banking_system.dto.response.ApiResponse;
 import com.trongdev.banking_system.dto.response.BankResponse;
 import com.trongdev.banking_system.dto.response.PaginatedResponse;
 import com.trongdev.banking_system.service.BankService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,9 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/banks")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Bank Controller")
 public class BankController {
     BankService bankService;
 
+    @Operation(summary = "Add new bank", description = "Send a request via this API to create new bank")
     @PostMapping
     ApiResponse<BankResponse> create(@RequestBody BankCreateRequest request){
         return ApiResponse.<BankResponse>builder()
@@ -27,6 +31,7 @@ public class BankController {
                 .build();
     }
 
+    @Operation(summary = "Get list of banks", description = "Send a request via this API to get bank list by page")
     @GetMapping
     ApiResponse<PaginatedResponse<BankResponse>> getAll(@RequestParam(defaultValue = "1") int page){
         return ApiResponse.<PaginatedResponse<BankResponse>>builder()
@@ -36,6 +41,7 @@ public class BankController {
                 .build();
     }
 
+    @Operation(summary = "Get bank detail", description = "Send a request via this API to get bank information")
     @GetMapping("/{bankId}")
     ApiResponse<BankResponse> getDetail(@PathVariable("bankId") int id){
         return ApiResponse.<BankResponse>builder()
@@ -45,6 +51,7 @@ public class BankController {
                 .build();
     }
 
+    @Operation(summary = "Update bank", description = "Send a request via this API to update a bank")
     @PutMapping("/{bankId}")
     ApiResponse<BankResponse> update(@PathVariable("bankId") int id, @RequestBody BankUpdateRequest request){
         return ApiResponse.<BankResponse>builder()
@@ -54,6 +61,7 @@ public class BankController {
                 .build();
     }
 
+    @Operation(summary = "Delete bank", description = "Send a request via this API to remove a bank")
     @DeleteMapping("/{bankId}")
     ApiResponse<Void> delete(@PathVariable("bankId") int id){
         bankService.delete(id);
