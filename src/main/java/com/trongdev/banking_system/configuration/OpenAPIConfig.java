@@ -16,7 +16,7 @@ import java.util.List;
 
 @Configuration
 public class OpenAPIConfig {
-//    http://localhost:8080/swagger-ui/index.html
+//    http://localhost:8080/zen8labs-system/swagger-ui/index.html#/
     @Bean
     public OpenAPI openAPI(@Value("${open.api.title}") String title,
                            @Value("${open.api.version}") String version,
