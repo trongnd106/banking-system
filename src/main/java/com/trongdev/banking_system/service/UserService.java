@@ -111,11 +111,8 @@ public class UserService {
         userMapper.updateUser(user, request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        // todo: Fix after integrate Token authen&author
-        // just user with permission UPDATE_ROLE can edit role
+        // Just admin can change user role
         if (request.getRoles() != null && !request.getRoles().isEmpty()) {
-//            if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-//                    .anyMatch(auth -> auth.getAuthority().equals("UPDATE_ROLE"))) {
             Set<Role> roles = new HashSet<>();
             for (String roleName : request.getRoles()) {
                 Role role = roleRepository.findById(roleName).orElseThrow(
@@ -124,9 +121,6 @@ public class UserService {
                 roles.add(role);
             }
             user.setRoles(roles);
-//            } else {
-//                throw new AppException(ErrorCode.PERMISSION_DENIED);
-//            }
         }
         return userMapper.toUserResponse(userRepository.save(user));
     }
