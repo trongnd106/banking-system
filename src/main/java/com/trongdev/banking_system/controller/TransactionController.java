@@ -3,6 +3,7 @@ package com.trongdev.banking_system.controller;
 import com.trongdev.banking_system.dto.request.TransactionRequest;
 import com.trongdev.banking_system.dto.response.ApiResponse;
 import com.trongdev.banking_system.dto.response.PaginatedResponse;
+import com.trongdev.banking_system.dto.response.TransactionDetailResponse;
 import com.trongdev.banking_system.dto.response.TransactionResponse;
 import com.trongdev.banking_system.service.TransactionService;
 import lombok.AccessLevel;
@@ -34,6 +35,15 @@ public class TransactionController {
                 .code(1000)
                 .result(transactionService.getAll(page))
                 .message("Get all transaction in page, " + page)
+                .build();
+    }
+
+    @GetMapping("/{transactionId}")
+    ApiResponse<TransactionDetailResponse> getDetail(@PathVariable("transactionId") String id){
+        return ApiResponse.<TransactionDetailResponse>builder()
+                .code(1000)
+                .result(transactionService.getDetail(id))
+                .message("Admin get 1 transaction detail successfully!")
                 .build();
     }
 }

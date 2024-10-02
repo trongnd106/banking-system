@@ -1,6 +1,8 @@
 package com.trongdev.banking_system.mapper;
 
+import com.trongdev.banking_system.dto.response.TransactionDetailResponse;
 import com.trongdev.banking_system.dto.response.TransactionResponse;
+import com.trongdev.banking_system.entity.Account;
 import com.trongdev.banking_system.entity.Transaction;
 import org.mapstruct.Mapper;
 

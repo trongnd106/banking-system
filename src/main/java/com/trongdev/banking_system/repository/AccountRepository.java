@@ -14,4 +14,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     Page<Account> findAllByUser(User user, Pageable pageable);
 
     Optional<Account> findByNumberAndBank_Name(String accountNumber, String bankName);
+
+    Optional<Account> findByNumber(String accountNumber);
 }
