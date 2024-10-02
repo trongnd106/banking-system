@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Integer> {
     Page<Account> findAllByUser(User user, Pageable pageable);
 
+    Page<Account> findAllByUserAndIsActive(User user, int isActive, Pageable pageable);
+
     Optional<Account> findByNumberAndBank_Name(String accountNumber, String bankName);
 
     Optional<Account> findByNumber(String accountNumber);

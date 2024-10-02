@@ -97,7 +97,7 @@ public class AccountService {
         return accountMapper.toAccountResponse(account);
     }
 
-    public PaginatedResponse<AccountDetailResponse> getMyAccount(int page){
+    public PaginatedResponse<AccountDetailResponse> getMyAccount(int page, int isActive){
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         var currUser = userRepository.findByUsername(username).orElseThrow(()
@@ -106,7 +106,7 @@ public class AccountService {
         var perPage = ConstValue.ACCOUNT_PER;
         Pageable pageable = PageRequest.of(page - 1, perPage);
 
-        Page<Account> accountPage = accountRepository.findAllByUser(currUser,pageable);
+        Page<Account> accountPage = accountRepository.findAllByUserAndIsActive(currUser,isActive,pageable);
         List<AccountDetailResponse> myAccountResponse = accountPage.getContent().stream()
                 .map(accountMapper::toAccountResponse).toList();
 

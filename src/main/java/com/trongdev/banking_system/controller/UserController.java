@@ -80,10 +80,12 @@ public class UserController {
     }
 
     @GetMapping("/my-account")
-    ApiResponse<PaginatedResponse<AccountDetailResponse>> getAccounts(@RequestParam(defaultValue = "1") int page){
+    ApiResponse<PaginatedResponse<AccountDetailResponse>> getAccounts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "1") int isActive){
         return ApiResponse.<PaginatedResponse<AccountDetailResponse>>builder()
                 .code(1000)
-                .result(accountService.getMyAccount(page))
+                .result(accountService.getMyAccount(page,isActive))
                 .message("Get your all accounts successfully!")
                 .build();
     }
